@@ -32,6 +32,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Location::class);
     }
+    public function review()
+    {
+        return $this->belongsTo(review::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
