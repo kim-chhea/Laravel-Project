@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\serviceDiscount;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ServiceDiscountSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class ServiceDiscountSeeder extends Seeder
     public function run(): void
     {
         //
-        $serviceDiscounts = [
+        DB::table('service_discount')->insert([
             ['service_id' => 1, 'discount_id' => 3],
             ['service_id' => 2, 'discount_id' => 1],
             ['service_id' => 3, 'discount_id' => 5],
@@ -25,10 +26,6 @@ class ServiceDiscountSeeder extends Seeder
             ['service_id' => 8, 'discount_id' => 7],
             ['service_id' => 9, 'discount_id' => 9],
             ['service_id' => 10, 'discount_id' => 10],
-        ];
-
-        foreach ($serviceDiscounts as $item) {
-            serviceDiscount::create($item);
-        }
+        ]);
     }
 }
