@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles')->cascadeOnUpdate();
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->foreign('location_id')->references('id')->on('locations')->cascadeOnUpdate();
             $table->string('name');
             $table->string('email')->unique();
