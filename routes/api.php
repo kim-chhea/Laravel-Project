@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,5 +19,24 @@ Route::delete('/logout',[AuthController::class , 'logout']);
 //user route
 Route::prefix('/allizo')->group(function(){
 Route::apiResource('/users',UserController::class);
+//location route
+Route::get('/locations',[LocationController::class,'index']);//admin
+Route::get('/locations/{id}',[LocationController::class,'show']);//user
+Route::post('/locations',[LocationController::class,'store']);//both
+Route::put('/locations/{id}',[LocationController::class,'update']);//user can edit their own locations
+Route::delete('/locations/{id}',[LocationController::class,'destroy']);//both
+
+//role route
+Route::get('/roles', [RoleController::class, 'index']); // View all roles
+Route::get('/roles/{id}', [RoleController::class, 'show']); // View one role
+Route::post('/roles', [RoleController::class, 'store']); // Create role (optional)
+Route::put('/roles/{id}', [RoleController::class, 'update']); // Update role (optional)
+Route::delete('/roles/{id}', [RoleController::class, 'destroy']); // Delete role
+
+// User-Role Management
+Route::post('/users/{userId}/roles/{roleId}', [RoleController::class, 'assignRole']); // Assign role to user
+Route::delete('/users/{userId}/roles/{roleId}', [RoleController::class, 'removeRole']); // Remove role from user
 });
+
+
 
