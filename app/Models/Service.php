@@ -32,5 +32,9 @@ class Service extends Model
     {
         return $this->belongsToMany(cart::class,'cart_services')->withTimestamps();
     }
+    public function review()
+    {
+        return $this->hasMany(review::class);
+    }
 
 }

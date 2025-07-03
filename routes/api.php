@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -36,6 +37,19 @@ Route::delete('/roles/{id}', [RoleController::class, 'destroy']); // Delete role
 // User-Role Management
 Route::post('/users/{userId}/roles/{roleId}', [RoleController::class, 'assignRole']); // Assign role to user
 Route::delete('/users/{userId}/roles/{roleId}', [RoleController::class, 'removeRole']); // Remove role from user
+
+//Review
+Route::get('/reviews',[ReviewController::class,'index']);
+Route::get('/reviews/{id}',[ReviewController::class,'show']);
+Route::post('/reviews',[ReviewController::class,'store']);
+Route::put('/reviews/{id}',[ReviewController::class,'update']);
+Route::delete('/reviews/{id}',[ReviewController::class,'destroy']);
+
+//view reviews base on service
+Route::get('/services/{serviceId}/reviews',[ReviewController::class,'reviewBaseOnId']);
+//review to service
+Route::post('/services/{seviceId}/reviews',[ReviewController::class,'review']);
+
 });
 
 
