@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('service_categories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate();
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate()->cascadeOnDelete();
             $table->unsignedBigInteger('service_id');
-            $table->foreign('service_id')->references('id')->on('services')->cascadeOnUpdate();
+            $table->foreign('service_id')->references('id')->on('services')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }

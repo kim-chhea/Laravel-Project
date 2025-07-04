@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +52,20 @@ Route::get('/services/{serviceId}/reviews',[ReviewController::class,'reviewBaseO
 //review to service
 Route::post('/services/{seviceId}/reviews',[ReviewController::class,'review']);
 
+//categories route
+Route::get('/categories', [CategoryController::class, 'index']); 
+Route::get('/categories/{id}', [CategoryController::class, 'show']);
+Route::post('/categories', [CategoryController::class, 'store']); 
+Route::put('/categories/{id}', [CategoryController::class, 'update']); 
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+//
+//service route
+Route::get('/services', [ServiceController::class, 'index']); 
+Route::get('/services/{id}', [ServiceController::class, 'show']);
+Route::post('/services', [ServiceController::class, 'store']); 
+Route::put('/services/{id}', [ServiceController::class, 'update']); 
+Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
 });
 
 
