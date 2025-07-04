@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     //
+    protected $fillable = ['title' ,'description', 'price'];
     public function order()
     {
         return $this->belongsToMany(Service::class , 'order_services')->withTimestamps();
@@ -15,7 +16,7 @@ class Service extends Model
     {
         return $this->belongsToMany(discount::class , 'service_discount')->withTimestamps();
     }
-    public function category()
+    public function categories()
     {
         return $this->belongsToMany(Category::class,'service_categories')->withTimestamps();
     }
