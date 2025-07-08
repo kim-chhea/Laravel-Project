@@ -29,9 +29,9 @@ class Service extends Model
         return $this->belongsToMany(booking::class,'booking_services')->withTimestamps();
 
     }
-    public function cart()
+    public function carts()
     {
-        return $this->belongsToMany(cart::class,'cart_services')->withTimestamps();
+        return $this->belongsToMany(cart::class,'cart_services')->withTimestamps()->withPivot('quantity');
     }
     public function review()
     {
