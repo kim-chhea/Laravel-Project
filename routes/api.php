@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ReviewController;
@@ -66,6 +67,17 @@ Route::get('/services/{id}', [ServiceController::class, 'show']);
 Route::post('/services', [ServiceController::class, 'store']); 
 Route::put('/services/{id}', [ServiceController::class, 'update']); 
 Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
+
+//Route cart
+Route::get('/carts', [CartController::class, 'index']); 
+Route::get('/carts/{id}', [CartController::class, 'show']);
+Route::post('/carts', [CartController::class, 'store']); 
+Route::put('/carts/{id}', [CartController::class, 'update']); 
+Route::delete('/carts/{id}', [CartController::class, 'destroy']);
+//cart managements
+Route::post('/cart/{cartId}/service', [CartController::class, 'addToCart']);
+Route::put('/cart/update', [CartController::class, 'updateQuantity']);
+Route::delete('/cart/remove', [CartController::class, 'removeService']);
 });
 
 

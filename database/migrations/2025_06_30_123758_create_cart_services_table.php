@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('cart_id')->references('id')->on('carts')->cascadeOnUpdate();
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services')->cascadeOnUpdate();
+            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }
