@@ -20,10 +20,11 @@ class Service extends Model
     {
         return $this->belongsToMany(Category::class,'service_categories')->withTimestamps();
     }
-    public function wishlist()
+    public function wishlists()
     {
-        return $this->belongsTo(wishlist::class);
+        return $this->belongsToMany(wishlist::class, 'wishlist_services');
     }
+    
     public function booking()
     {
         return $this->belongsToMany(booking::class,'booking_services')->withTimestamps();
