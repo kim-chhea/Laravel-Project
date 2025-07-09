@@ -8,6 +8,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -74,10 +75,21 @@ Route::get('/carts/{id}', [CartController::class, 'show']);
 Route::post('/carts', [CartController::class, 'store']); 
 Route::put('/carts/{id}', [CartController::class, 'update']); 
 Route::delete('/carts/{id}', [CartController::class, 'destroy']);
+
 //cart managements
 Route::post('/cart/{cartId}/service', [CartController::class, 'addToCart']);
-Route::put('/cart/update', [CartController::class, 'updateQuantity']);
-Route::delete('/cart/remove', [CartController::class, 'removeService']);
+Route::delete('/cart/{cartId}/remove', [CartController::class, 'removeService']);
+
+//route wishlist
+Route::get('/wishlist', [WishlistController::class, 'index']); 
+Route::get('/wishlist/{id}', [WishlistController::class, 'show']);
+Route::post('/wishlist', [WishlistController::class, 'store']); 
+Route::put('/wishlist/{id}', [WishlistController::class, 'update']); 
+Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy']);
+
+//wishlist managements
+Route::post('/wishlist/{listId}/service', [CartController::class, 'addService']);
+Route::delete('/wishlist/{listId}/remove', [CartController::class, 'removeService']);
 });
 
 

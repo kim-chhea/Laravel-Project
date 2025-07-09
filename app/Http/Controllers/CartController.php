@@ -8,6 +8,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
+use function PHPUnit\Framework\isEmpty;
+
 // use Illuminate\Support\Facades\Hash;
 
 class CartController extends Controller
@@ -173,7 +175,7 @@ class CartController extends Controller
             //find is that cart exits or not
             $cart = cart::findOrFail($cartId);
             //get qty
-            $quantity = $validated['quantity'] ?? 1;
+            $quantity = $valideteData['quantity'] ?? 1;
             //find is that service already exit in that cart or not
             $service = $cart->services()->where('service_id',$valideteData['service_id'])->first();
             if($service)
@@ -196,6 +198,33 @@ class CartController extends Controller
         }
         catch(Exception $e){
         throw new CustomeExceptions($e->getMessage() , 500);
+        }
+    }
+    public function removeService(Request $request , $cartId)
+    {
+        try
+        {
+        $validatedate = $request->validate([
+            "service_id" => 'required|integer'
+        ]);
+        //find cart base on id 
+        $cart = cart::findOrFail($cartId);
+        $service = $cart->services()->where('service_id', $request->input('service_id'))->exists();
+        if(!$service)
+        {
+         throw new CustomeExceptions('Service not found in this cart' , 404);
+        }
+            // remove it 
+            $cart->services()->detach($validatedate['service_id']);
+
+            return response()->json([
+                'message' => 'Service removed from cart.',
+                'status' => 200
+            ]);
+        }
+        catch(Exception $e)
+        {
+                throw new CustomeExceptions($e->getMessage() , 500);
         }
     }
         

@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
           ServiceDiscountSeeder::class,
           BookingServiceSeeder::class,
           CartServiceSeeder::class,
+          WishlistServiceSeeder::class
 
        ]);
     }
