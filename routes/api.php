@@ -5,11 +5,13 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
+use App\Models\payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -101,6 +103,12 @@ Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
 //booking management 
 Route::post('/booking/{bookingId}/service/{serviceId}', [BookingController::class, 'addService']);
 Route::delete('/booking/{bookingId}/service/{serviceId}', [BookingController::class, 'removeService']);
+//payment route
+Route::get('/payment', [PaymentController::class, 'index']); 
+Route::get('/payment/{id}', [PaymentController::class, 'show']);
+Route::post('/payment', [PaymentController::class, 'store']); 
+Route::put('/payment/{id}', [PaymentController::class, 'update']); 
+Route::delete('/payment/{id}', [PaymentController::class, 'destroy']);
 });
 
 
