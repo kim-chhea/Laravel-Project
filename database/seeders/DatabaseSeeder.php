@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Location;
 use App\Models\User;
+use BookingServiceSeeder;
+use Database\Seeders\BookingServiceSeeder as SeedersBookingServiceSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Whoops\Run;
@@ -31,7 +33,7 @@ class DatabaseSeeder extends Seeder
           OrderServiceSeeder::class,
           serviceCategoriesSeeder::class,
           ServiceDiscountSeeder::class,
-          BookingServiceSeeder::class,
+          SeedersBookingServiceSeeder::class,
           CartServiceSeeder::class,
           WishlistServiceSeeder::class
 

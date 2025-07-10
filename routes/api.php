@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LocationController;
@@ -78,7 +79,7 @@ Route::delete('/carts/{id}', [CartController::class, 'destroy']);
 
 //cart managements
 Route::post('/cart/{cartId}/service', [CartController::class, 'addToCart']);
-Route::delete('/cart/{cartId}/remove', [CartController::class, 'removeService']);
+Route::delete('/cart/{cartId}/service', [CartController::class, 'removeService']);
 
 //route wishlist
 Route::get('/wishlist', [WishlistController::class, 'index']); 
@@ -88,8 +89,18 @@ Route::put('/wishlist/{id}', [WishlistController::class, 'update']);
 Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy']);
 
 //wishlist managements
-Route::post('/wishlist/{listId}/service', [CartController::class, 'addService']);
-Route::delete('/wishlist/{listId}/remove', [CartController::class, 'removeService']);
+Route::post('/wishlist/{wishlistId}/service', [WishlistController::class, 'addService']);
+Route::delete('/wishlist/{wishlistId}/service', [WishlistController::class, 'removeService']);
+
+//Booking route
+Route::get('/booking', [BookingController::class, 'index']); 
+Route::get('/booking/{id}', [BookingController::class, 'show']);
+Route::post('/booking', [BookingController::class, 'store']); 
+Route::put('/booking/{id}', [BookingController::class, 'update']); 
+Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
+//booking management 
+Route::post('/booking/{bookingId}/service/{serviceId}', [BookingController::class, 'addService']);
+Route::delete('/booking/{bookingId}/service/{serviceId}', [BookingController::class, 'removeService']);
 });
 
 
