@@ -163,36 +163,32 @@ class WishlistController extends Controller
 
     }
 
-    public function addTowishlwishlist(Request $request , $wishlistId)
+    public function addService(Request $request , $wishlistId)
     {
         try
         {
 
             $valideteData = $request->validate([
                 "service_id" => "required|integer",
-                "quantity" => "nullable|integer|min:1"
             ]);
-            //find is thatwishlist exits or not
+            //find is that wishlist exits or not
             $wishlist =wishlist::findOrFail($wishlistId);
-            //get qty
-            $quantity = $valideteData['quantity'] ?? 1;
-            //find is that service already exit in thatwishlist or not
-            $service = $wishlist->services()->where('service_id',$valideteData['service_id'])->first();
+            //find is that service already exit in that wishlist or not
+           $service = $wishlist->services()->where('service_id', $valideteData['service_id'])->exists();
             if($service)
+            //return true or fail
             {
-                $currentQty = $service->pivot->quantity;
-                $wishlist->services()->updateExistingPivot($valideteData['service_id'], [
-                    'quantity' => $currentQty + $quantity
+                return response()->json([
+                    'message' => 'The services already had in that wishlist.',
+                    'status' => 400,
                 ]);
             } 
             else 
             {
-                $wishlist->services()->attach($valideteData['service_id'], [
-                    'quantity' => $quantity
-                ]);
+                $wishlist->services()->attach($valideteData['service_id']);
             }
             return response()->json([
-                'message' => 'Service added towishlist successfully.',
+                'message' => 'Service added to wishlist successfully.',
                 'status' => 200
             ]);
         }
@@ -207,8 +203,8 @@ class WishlistController extends Controller
         $validatedate = $request->validate([
             "service_id" => 'required|integer'
         ]);
-        //findwishlist base on id 
-        $wishlist =wishlist::findOrFail($wishlistId);
+        //find wishlist base on id 
+        $wishlist = wishlist::findOrFail($wishlistId);
         $service = $wishlist->services()->where('service_id', $request->input('service_id'))->exists();
         if(!$service)
         {
@@ -218,7 +214,7 @@ class WishlistController extends Controller
             $wishlist->services()->detach($validatedate['service_id']);
 
             return response()->json([
-                'message' => 'Service removed fromwishlist.',
+                'message' => 'Service removed from wishlist.',
                 'status' => 200
             ]);
         }
