@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->foreign('order_id')->references('id')->on('orders')->cascadeOnUpdate();
-            $table->integer('price');
-            // $table->integer('status');
+            $table->unsignedBigInteger('booking_id');
+            $table->foreign('booking_id')->references('id')->on('bookings')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->decimal('price', 10,2);
             $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->string('payment_method')->nullable();
+            $table->string('transaction_id')->nullable(); 
             $table->timestamps();
         });
     }
