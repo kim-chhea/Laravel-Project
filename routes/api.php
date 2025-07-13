@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
@@ -109,6 +111,23 @@ Route::get('/payment/{id}', [PaymentController::class, 'show']);
 Route::post('/payment', [PaymentController::class, 'store']); 
 Route::put('/payment/{id}', [PaymentController::class, 'update']); 
 Route::delete('/payment/{id}', [PaymentController::class, 'destroy']);
+
+//order route
+Route::get('order', [OrderController::class, 'index']); 
+Route::get('order/{id}', [OrderController::class, 'show']);
+Route::post('order', [OrderController::class, 'store']); 
+Route::put('order/{id}', [OrderController::class, 'update']); 
+Route::delete('order/{id}', [OrderController::class, 'destroy']);
+
+//discount route
+Route::get('/discount', [DiscountController::class, 'index']); 
+Route::get('/discount/{id}', [DiscountController::class, 'show']);
+Route::post('/discount', [DiscountController::class, 'store']); 
+Route::put('/discount/{id}', [DiscountController::class, 'update']); 
+Route::delete('/discount/{id}', [DiscountController::class, 'destroy']);
+//dicount management 
+Route::post('/discount/{discountId}/service/{serviceId}',[DiscountController::class,'assigndiscount']);
+Route::delete('/discount/{discountId}/service/{serviceId}',[DiscountController::class,'removediscount']);
 });
 
 
