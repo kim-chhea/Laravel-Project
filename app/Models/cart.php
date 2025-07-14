@@ -13,6 +13,6 @@ class cart extends Model
     }
     public function services()
     {
-        return $this->belongsToMany(Service::class,'cart_services')->withTimestamps() ->withPivot('quantity');
+        return $this->belongsToMany(Service::class,'cart_services')->withTimestamps()->withPivot('quantity');
     }
 }

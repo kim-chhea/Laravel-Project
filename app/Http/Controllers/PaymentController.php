@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\CustomeExceptions;
+use App\Models\booking;
 use App\Models\payment;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use PhpParser\Node\Expr\FuncCall;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -232,6 +235,50 @@ class PaymentController extends Controller
         {
                 throw new CustomeExceptions($e->getMessage() , 500);
         }
+    }
+    public function payment (Request $request)
+    {
+        //validata data 
+        $data = $request->validate([
+            'booking_id' => "required|integer",
+            "payment_method" => "required|string",
+        ]);
+
+        // check if that booking base on booking_id exit or not
+        $booking = booking::with('services')->where('id', $data['booking_id'])->first();
+         //find all the service base on booking_id
+         if(!$booking )
+         {
+            return response()->json([
+                'message' => 'Booking not found for this user.',
+                'status' => 404
+            ]);
+         }
+        //  return response()->json([
+        //     "data" => $booking,
+        //     "status"=> 200,
+        //  ]);
+
+        //loop throught that service attach to payment 
+        $total = 0;
+        foreach($booking->services as $service)
+        {
+        
+            $total += $service->price * 1;
+        }
+        // 5. Create payment record
+        $payment = payment::create([
+        'booking_id'     => $booking->id,
+        'price'          => $total,
+        'status'         => 'paid',
+        'payment_method' => $data['payment_method'], 
+        'transaction_id' => 'TXN-' . strtoupper(uniqid())
+    ]);
+     return response()->json([
+        'message' => 'Payment created successfully.',
+        'status'  => 201,
+        'data'    => $payment
+    ]);
     }
         
 }

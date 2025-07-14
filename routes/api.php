@@ -105,12 +105,15 @@ Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
 //booking management 
 Route::post('/booking/{bookingId}/service/{serviceId}', [BookingController::class, 'addService']);
 Route::delete('/booking/{bookingId}/service/{serviceId}', [BookingController::class, 'removeService']);
+Route::post('/booking/checkout', [BookingController::class, 'checkoutFromCart']);
 //payment route
 Route::get('/payment', [PaymentController::class, 'index']); 
 Route::get('/payment/{id}', [PaymentController::class, 'show']);
 Route::post('/payment', [PaymentController::class, 'store']); 
 Route::put('/payment/{id}', [PaymentController::class, 'update']); 
 Route::delete('/payment/{id}', [PaymentController::class, 'destroy']);
+
+Route::post('/payment/checkout',[PaymentController::class,'payment']);
 
 //order route
 Route::get('order', [OrderController::class, 'index']); 

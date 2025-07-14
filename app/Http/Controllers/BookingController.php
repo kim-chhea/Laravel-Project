@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\CustomeExceptions;
 use App\Models\booking;
+use App\Models\cart;
+use App\Models\review;
 use App\Models\Service;
 use Exception;
 use Illuminate\Http\Request;
@@ -232,5 +234,43 @@ class BookingController extends Controller
                 throw new CustomeExceptions($e->getMessage() , 500);
         }
     }
+        public function checkoutfromcart(Request $request)
+        {
+            //validate user id
+            $data = $request->validate([
+                "user_id" => "required|integer|exists:users,id"
+            ]);
+            //check if that cart have service or not
+            $cart = cart::with('services')->get()->where('user_id', $data['user_id'])->first();
+            if(!$cart)
+            {
+                return response()->json([
+                    'message' => 'Cart is empty or not found',
+                    'status' => 400
+                ]);
+            }
+            //create new booking 
+            $booking = booking::create([
+                'user_id' => $data['user_id']
+            ]);
+            // Attach services from cart to booking
+            foreach ($cart->services as $service) {
+                $booking->services()->attach($service->id, [
+                    'booking_date' => now()->toDateString(),
+                    'time_slot' => now()->format('H:i:s'),
+                    'status' => 'pending',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            //clear cart list
+            $cart->services()->detach();
+             // Step 7: Return success response
+             return response()->json([
+                'message' => 'Booking created successfully from cart.',
+                'status' => 201,
+                'data' => $booking->load('services')
+    ]); 
+        }
         
 }
