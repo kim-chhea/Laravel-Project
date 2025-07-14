@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\CustomeExceptions;
-use App\Models\discount;
+use App\Models\order;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,18 +19,18 @@ class OrderController extends Controller
         try
         {
 
-            $discount = discount::get();
-            if(!$discount)
+            $order = order::get();
+            if(!$order)
             {
                 return response()->json([
-                   'message' => 'No discounts found.',
+                   'message' => 'No orders found.',
                     'status' => 404,
                 ]);
             }
             return response()->json([
-                'message' => 'discounts retrieved successfully.',
+                'message' => 'orders retrieved successfully.',
                 'status' => 200,
-                'data' => $discount,
+                'data' => $order,
             ]);
         }
         catch(Exception $e)
@@ -57,20 +57,20 @@ class OrderController extends Controller
         try
         {
           $ValidatedData = $request->validate([
-            "title" => "required|string",
-            "descriptions" => "required|string",
-            "percentage" => "required|integer|min:1|max:100",
+            "user_id" => "required|integer",
+            "total_price" => "required|integer",
+            "status" => "required|string",
           ]);
          
-          $discount = discount::create($ValidatedData);
-          if(!$discount)
+          $order = order::create($ValidatedData);
+          if(!$order)
           {
-            throw new CustomeExceptions('discount creation failed due to an unexpected error.', 500);
+            throw new CustomeExceptions('order creation failed due to an unexpected error.', 500);
           }
           return response()->json([
-            'message' => 'discount created successfully.',
+            'message' => 'order created successfully.',
             'status' => 201,
-            'data' => $discount,
+            'data' => $order,
         ]);
 
         }
@@ -88,11 +88,11 @@ class OrderController extends Controller
         try
         {
 
-            $discount = discount::findOrFail($id);
+            $order = order::findOrFail($id);
             return response()->json([
-                'message' => 'discounts retrieved successfully.',
+                'message' => 'orders retrieved successfully.',
                 'status' => 200,
-                'data' => $discount,
+                'data' => $order,
             ]);
         }
         catch(Exception $e)
@@ -117,22 +117,22 @@ class OrderController extends Controller
         try
         {
           $ValidatedData = $request->validate([
-            "title" => "sometimes|string",
-            "descriptions" => "sometimes|string",
-            "percentage" => "sometimes|integer|min:1|max:100",
+            "user_id" => "sometimes|integer",
+            "total_price" => "sometimes|integer",
+            "status" => "sometimes|string",
          
           ]);
 
-          $discount = discount::findOrFail($id);
-          $updatedSuccess = $discount->update($ValidatedData);
+          $order = order::findOrFail($id);
+          $updatedSuccess = $order->update($ValidatedData);
           if(!$updatedSuccess)
           {
-            throw new CustomeExceptions('discount updation failed due to an unexpected error.', 500);
+            throw new CustomeExceptions('order updation failed due to an unexpected error.', 500);
           }
           return response()->json([
-            'message' => 'discount updated successfully.',
+            'message' => 'order updated successfully.',
             'status' => 200,
-            'data' => $discount,
+            'data' => $order,
         ]);
 
         }
@@ -150,10 +150,10 @@ class OrderController extends Controller
         try
         {
 
-            $discount = discount::findOrFail($id);
-            $discount->delete();
+            $order = order::findOrFail($id);
+            $order->delete();
             return response()->json([
-                'message' => 'discounts deleted successfully.',
+                'message' => 'orders deleted successfully.',
                 'status' => 200,
             ]);
         }
@@ -163,25 +163,25 @@ class OrderController extends Controller
         }
 
     }
-    public function assigndiscount( $userID , $discountID)
+    public function assignorder( $userID , $orderID)
     {
         try
         {
-             // Check if discount exists 
-            $discount = discount::find($discountID);
-            if (!$discount) {
+             // Check if order exists 
+            $order = order::find($orderID);
+            if (!$order) {
             return response()->json([
-                'message' => 'discount not found.',
+                'message' => 'order not found.',
                 'status' => 404,
             ], 404);
         }
             // find that user
             $user =  User::findOrFail($userID) ;
-            // if it exit assign discount to it
-            $user->discount_id = $discountID;
+            // if it exit assign order to it
+            $user->order_id = $orderID;
             $user->save();
             return response()->json([
-                'message' => 'discount assigned successfully.',
+                'message' => 'order assigned successfully.',
                 'status' => 200,
                 'user' => $user
             ], 200);
@@ -192,32 +192,32 @@ class OrderController extends Controller
         }
     }
 
-    public function removediscount($userID , $discountID)
+    public function removeorder($userID , $orderID)
     {
         try
         {
-             // Check if discount exists 
-            $discount = discount::find($discountID);
-            if (!$discount) {
+             // Check if order exists 
+            $order = order::find($orderID);
+            if (!$order) {
             return response()->json([
-                'message' => 'discount not found.',
+                'message' => 'order not found.',
                 'status' => 404,
             ], 404);
         }
             // find that user
             $user =  User::findOrFail($userID) ;
 
-            if ($user->discount_id != $discountID) {
+            if ($user->order_id != $orderID) {
                 return response()->json([
-                    'message' => 'User does not have this discount.',
+                    'message' => 'User does not have this order.',
                     'status' => 400,
                 ], 400);
             }
-            // Remove discount
-            $user->discount_id = 1;
+            // Remove order
+            $user->order_id = 1;
             $user->save();
             return response()->json([
-                'message' => 'discount removed successfully.',
+                'message' => 'order removed successfully.',
                 'status' => 200,
                 'user' => $user
             ], 200);
