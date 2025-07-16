@@ -121,6 +121,8 @@ Route::get('order/{id}', [OrderController::class, 'show']);
 Route::post('order', [OrderController::class, 'store']); 
 Route::put('order/{id}', [OrderController::class, 'update']); 
 Route::delete('order/{id}', [OrderController::class, 'destroy']);
+//get ordered
+Route::get('orderes/receipt', [OrderController::class, 'getReceipt']);
 
 //discount route
 Route::get('/discount', [DiscountController::class, 'index']); 

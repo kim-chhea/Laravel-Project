@@ -18,8 +18,14 @@ class OrderController extends Controller
     {
         try
         {
-
-            $order = order::get();
+            $order = Order::with([
+                'payment:id,booking_id,price,payment_method,transaction_id,status',
+                'payment.booking:id,user_id',
+                'payment.booking.user:id,name',
+                'payment.booking.user.cart:id,user_id',
+                'payment.booking.user.cart.services:id,title,description,price'
+            ])->get(['id', 'user_id', 'payment_id', 'status']);
+            
             if(!$order)
             {
                 return response()->json([
@@ -163,68 +169,5 @@ class OrderController extends Controller
         }
 
     }
-    public function assignorder( $userID , $orderID)
-    {
-        try
-        {
-             // Check if order exists 
-            $order = order::find($orderID);
-            if (!$order) {
-            return response()->json([
-                'message' => 'order not found.',
-                'status' => 404,
-            ], 404);
-        }
-            // find that user
-            $user =  User::findOrFail($userID) ;
-            // if it exit assign order to it
-            $user->order_id = $orderID;
-            $user->save();
-            return response()->json([
-                'message' => 'order assigned successfully.',
-                'status' => 200,
-                'user' => $user
-            ], 200);
-        } 
-        catch(Exception $e)
-        {
-            throw new CustomeExceptions($e->getMessage(),500);
-        }
-    }
-
-    public function removeorder($userID , $orderID)
-    {
-        try
-        {
-             // Check if order exists 
-            $order = order::find($orderID);
-            if (!$order) {
-            return response()->json([
-                'message' => 'order not found.',
-                'status' => 404,
-            ], 404);
-        }
-            // find that user
-            $user =  User::findOrFail($userID) ;
-
-            if ($user->order_id != $orderID) {
-                return response()->json([
-                    'message' => 'User does not have this order.',
-                    'status' => 400,
-                ], 400);
-            }
-            // Remove order
-            $user->order_id = 1;
-            $user->save();
-            return response()->json([
-                'message' => 'order removed successfully.',
-                'status' => 200,
-                'user' => $user
-            ], 200);
-        } 
-        catch(Exception $e)
-        {
-            throw new CustomeExceptions($e->getMessage(),500);
-        }
-    }
+   
 }

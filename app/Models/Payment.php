@@ -12,4 +12,8 @@ class payment extends Model
     {
         return $this->belongsTo(booking::class);
     }
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
 }
