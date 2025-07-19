@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Service;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 // use Illuminate\Support\Facades\Hash;
 
 class ServiceController extends Controller
@@ -61,14 +63,22 @@ class ServiceController extends Controller
             "description" => "required|string",
             "price" => "required|integer",
             "category_id" => "required|integer",
+            "image" => "nullable|image|mimes:png,jpg,jpeg|max:2048"
           ]);
-
-          $service = service::create(
-            [
-            'title' => $ValidatedData['title'],
-            'description' => $ValidatedData['description'],
-            'price' => $ValidatedData['price'],
-            ]);
+          if($request->hasFile('image'))
+          {
+            $photo = $request->file('image');
+            $fileName = $photo->hashName();
+            $photo->storeAs('photos', $fileName, 'public');
+          }
+            // store it in storage/public/photos/...
+            $service = service::create(
+                [
+                'title' => $ValidatedData['title'],
+                'description' => $ValidatedData['description'],
+                'price' => $ValidatedData['price'],
+                'image' => $fileName
+                ]);
 
           $service->categories()->attach($ValidatedData['category_id']);
           if(!$service)
