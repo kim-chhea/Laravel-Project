@@ -21,7 +21,7 @@ class ServiceController extends Controller
         try
         {
 
-            $service = service::with(['categories'])->get(['id','title','description','price']);
+            $service = service::with(['categories'])->get(['id','title','description','price','image']);
             if(!$service)
             {
                 return response()->json([
@@ -139,6 +139,7 @@ class ServiceController extends Controller
                 "description" => "sometimes|string",
                 "price" => "sometimes|integer",
                 "category_id" => "sometimes|integer",
+                "image" => "somtimise|image|mimes:png,jpg,jpeg|max:2048"
               ]);
 
               $service = service::findOrFail($id);

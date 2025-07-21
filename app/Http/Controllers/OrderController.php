@@ -7,6 +7,7 @@ use App\Models\order;
 use App\Models\payment;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use function PHPUnit\Framework\isEmpty;
@@ -98,7 +99,14 @@ class OrderController extends Controller
         try
         {
 
-            $order = order::findOrFail($id);
+            
+            $order = Order::with([
+                'payment:id,booking_id,price,payment_method,transaction_id,status',
+                'payment.booking:id,user_id',
+                'payment.booking.user:id,name',
+                'payment.booking.user.cart:id,user_id',
+                'payment.booking.user.cart.services:id,title,description,price'
+            ])->select(['id', 'user_id', 'payment_id'])->find($id);
             return response()->json([
                 'message' => 'orders retrieved successfully.',
                 'status' => 200,
@@ -172,69 +180,61 @@ class OrderController extends Controller
         }
 
     }
-    public function getReceipt(Request $request)
-    {
-        try
-        {
-            //validate data
-        $data = $request->validate(
-            [ 
-              'user_id' => 'required|integer|exists:users,id',
-              'payment_id' => 'required|integer|exists:,payments,id',
-        ]
-    );
-         //check if order base on id exit or not if it not create one 
-         $order = order::where('payment_id',$data['payment_id'])->first();
-         if(! $order)
-         {
-            $payment = Payment::with('booking.user')->findOrFail($data['payment_id']);
-            if ($payment->booking->user->id != $data['user_id']) {
-                return response()->json([
-                    'message' => 'Unauthorized: Payment does not belong to this user.',
-                    'status' => 403,
-                ]);
-            }
-            else
-            {
-                // check the status of payment and bind it to order
-                if ($payment->status === 'paid') {
-                    $order->status = 'paid';
-                    $order->save();
-                }
-                if ($payment->status === 'pending') {
-                    $order->status = 'pending';
-                    $order->save();
-                }
-            
-            $order = Order::create([
-                'user_id'     => $data['user_id'],
-                'payment_id'  => $data['payment_id'],
-                'status'      => $payment->status === 'paid' ? 'paid' : 'pending',
-            ]);
+// public function getReceipt(Request $request)
+// {
+//     try {
+//         // 1. Validate incoming data
+//         $data = $request->validate([
+//             'user_id'    => 'required|integer|exists:users,id',
+//             'payment_id' => 'required|integer|exists:payments,id',
+//         ]);
 
-            }
-            return response()->json([
-                'message' => 'Receipt retrieved successfully.',
-                'order' => $order,
-                'payment' => $payment,
-            ]);
-         }
-         else
-         {
-             // 6. If order exists → return it
-            $order = Order::with('payment')->where('payment_id', $data['payment_id'])->first();
+//         // 2. Check if an order already exists for this payment
+//         $existingOrder = Order::with('payment')->where('payment_id', $data['payment_id'])->first();
 
-            return response()->json([
-            'message' => 'Receipt retrieved successfully.',
-            'order'   => $order,
-            'payment' => $order->payment,
-        ]);
-         }
-         }
-        catch(Exception $e)
-        {
-            throw new CustomeExceptions($e->getMessage(), 500);
-        }
+//         if ($existingOrder) {
+//             return response()->json([
+//                 'message' => 'Receipt retrieved successfully.',
+//                 'order'   => $existingOrder,
+//                 'payment' => $existingOrder->payment,
+//             ], 200);
+//         }
+
+//         // 3. Find the payment and ensure it belongs to the given user
+//         $payment = Payment::with('booking.user')->findOrFail($data['payment_id']);
+
+//         if ($payment->booking->user->id !== $data['user_id']) {
+//             return response()->json([
+//                 'message' => 'Unauthorized: Payment does not belong to this user.',
+//             ], 403);
+//         }
+
+//         // 4. Create a new order
+//         $newOrder = Order::create([
+//             'user_id'     => $data['user_id'],
+//             'payment_id'  => $data['payment_id'],
+//             'status'      => $payment->status === 'paid' ? 'paid' : 'pending',
+//             // 'booking_id' => $payment->booking->id, // Uncomment if your Order table has this column
+//         ]);
+
+//         return response()->json([
+//             'message' => 'Receipt created successfully.',
+//             'order'   => $newOrder,
+//             'payment' => $payment,
+//         ], 201);
+
+//     } catch (ModelNotFoundException $e) {
+//         return response()->json([
+//             'message' => 'Payment not found or related data is missing.',
+//         ], 404);
+//     } catch (Exception $e) {
+//         return response()->json([
+//             'message' => 'Server error: ' . $e->getMessage(),
+//         ], 500);
+//     }
+// }
+
+
     }
    
-}
+
