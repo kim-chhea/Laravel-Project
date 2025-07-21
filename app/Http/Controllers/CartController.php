@@ -170,19 +170,18 @@ class CartController extends Controller
 
             $valideteData = $request->validate([
                 "service_id" => "required|integer",
-                "quantity" => "nullable|integer|min:1"
             ]);
             //find is that cart exits or not
             $cart = cart::findOrFail($cartId);
             //get qty
-            $quantity = $valideteData['quantity'] ?? 1;
+            $quantity =  1;
             //find is that service already exit in that cart or not
             $service = $cart->services()->where('service_id',$valideteData['service_id'])->first();
             if($service)
             {
                 $currentQty = $service->pivot->quantity;
                 $cart->services()->updateExistingPivot($valideteData['service_id'], [
-                    'quantity' => $currentQty + $quantity
+                    'quantity' => $quantity
                 ]);
             } 
             else 

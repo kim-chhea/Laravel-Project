@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->foreign('booking_id')->references('id')->on('bookings')->cascadeOnUpdate()->cascadeOnDelete();
             $table->decimal('price', 10,2);
-            $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->enum('status', ['pending', 'paid', 'failed','faild'])->default('pending');
             $table->string('payment_method')->nullable();
             $table->string('transaction_id')->nullable(); 
             $table->timestamps();

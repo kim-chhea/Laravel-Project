@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate();
-            $table->integer('total_price');
-            $table->string('status');
+            $table->unsignedBigInteger('payment_id');
+            $table->foreign('payment_id')->references('id')->on('payments')->cascadeOnUpdate()->cascadeOnDelete();
+            // $table->integer('total_price');
+            $table->enum('status',['pending','paid','cancelled'])->default('pending');
             $table->timestamps();
         });
     }

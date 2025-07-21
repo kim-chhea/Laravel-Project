@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     //
-    protected $fillable = ['title' ,'description', 'price'];
+    protected $fillable = ['title' ,'description', 'price','image'];
     public function order()
     {
         return $this->belongsToMany(Service::class , 'order_services')->withTimestamps();
